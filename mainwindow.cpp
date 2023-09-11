@@ -74,6 +74,8 @@ void MainWindow::gerer_donnees()
 {
     // Réception des données
     QByteArray reponse = tcpSocket->readAll();
+    QString trame = QString(reponse);
+
 
     // Affichage
     ui->lineEdit_reponse->setText(QString(reponse));
