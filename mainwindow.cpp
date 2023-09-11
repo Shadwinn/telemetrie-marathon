@@ -97,8 +97,18 @@ void MainWindow::gerer_donnees()
     QString sec = horaire.mid(4,2);
 
     // Affichage
+    QPixmap carte;
+    carte.load(":/Bureau/GitHub/telemetrie-marathon/carte_la_rochelle_plan.png");
+
+    QGraphicsScene *scene = new QGraphicsScene(ui->cartelarochelle);
+    scene->addPixmap(carte);
+    scene->setSceneRect(0,0, carte.width(), carte.height());
+
     ui->lineEdit_reponse->setText(QString(reponse));
-    ui->lineEdit_heure->setText(heure+"H"+minutes+"min"+sec+"sec");
+    ui->lineEdit_heure->setText(heure+" h "+minutes+" min "+sec+" sec ");
+    ui->cartelarochelle->setScene( scene);
+    ui->cartelarochelle->resize(carte.width(), carte.height());
+    ui->cartelarochelle->setRenderHints(QPainter::Antialiasing);
     qDebug() << QString(reponse);
 }
 
