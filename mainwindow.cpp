@@ -75,7 +75,26 @@ void MainWindow::gerer_donnees()
     // Réception des données
     QByteArray reponse = tcpSocket->readAll();
     QString trame = QString(reponse);
+    QStringList liste = trame.split(",");
+    QString horaire = liste[1];
+    QString latitude = liste[2];
+    QString nord_ou_sud = liste[3];
+    QString longitude = liste[4];
+    QString est_ou_ouest = liste[5];
+    QString postype = liste[6];
+    QString nb_satellite = liste[7];
+    QString precision_horizontale = liste[8];
+    QString altitude = liste[9];
+    QString hauteur_geo = liste[10];
+    QString unite_altitude = liste[11];
+    QString tps_last_maj = liste[12];
+    QString id_station_ref = liste[13];
+    QString checksum = liste[14];
 
+    // Calculs
+    QString heure = horaire.mid(0,1);
+    QString minutes = horaire.mid(2,3);
+    QString sec = horaire.mid(4,5);
 
     // Affichage
     ui->lineEdit_reponse->setText(QString(reponse));
