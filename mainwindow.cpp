@@ -92,12 +92,13 @@ void MainWindow::gerer_donnees()
     QString checksum = liste[14];
 
     // Calculs
-    QString heure = horaire.mid(0,1);
-    QString minutes = horaire.mid(2,3);
-    QString sec = horaire.mid(4,5);
+    QString heure = horaire.mid(0,2);
+    QString minutes = horaire.mid(2,2);
+    QString sec = horaire.mid(4,2);
 
     // Affichage
     ui->lineEdit_reponse->setText(QString(reponse));
+    ui->lineEdit_heure->setText(heure+"H"+minutes+"min"+sec+"sec");
     qDebug() << QString(reponse);
 }
 
