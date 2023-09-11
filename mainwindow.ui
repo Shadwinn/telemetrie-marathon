@@ -183,8 +183,8 @@
    <widget class="QGraphicsView" name="cartelarochelle">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>20</y>
+      <x>430</x>
+      <y>10</y>
       <width>256</width>
       <height>192</height>
      </rect>
