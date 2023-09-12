@@ -7,7 +7,8 @@
 #include <QTimer>
 #include <QDebug>
 #include <QImage>
-#include <QPixmap>
+
+
 
 namespace Ui {
 class MainWindow;
