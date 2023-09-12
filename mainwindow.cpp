@@ -20,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Instanciation du timer
     pTimer = new QTimer();
+    // Instanciation de la carte
+    pCarte = new QImage();
+    pCarte->load("/GitHub/telemetrie-marathon/carte_la_rochelle_plan.png");
+
 
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
@@ -42,6 +46,9 @@ MainWindow::~MainWindow()
 
     // Destruction du timer
     delete pTimer;
+
+    // Destruction de la carte
+    delete pCarte;
 }
 
 void MainWindow::on_connexionButton_clicked()
@@ -96,21 +103,16 @@ void MainWindow::gerer_donnees()
     QString minutes = horaire.mid(2,2);
     QString sec = horaire.mid(4,2);
 
-    // Affichage
-    QPixmap carte;
-    carte.load(":/Bureau/GitHub/telemetrie-marathon/carte_la_rochelle_plan.png");
 
-    QGraphicsScene *scene = new QGraphicsScene(ui->cartelarochelle);
-    scene->addPixmap(carte);
-    scene->setSceneRect(0,0, carte.width(), carte.height());
+    // Affichage
 
     ui->lineEdit_reponse->setText(QString(reponse));
     ui->lineEdit_heure->setText(heure+" h "+minutes+" min "+sec+" sec ");
-    ui->cartelarochelle->setScene( scene);
-    ui->cartelarochelle->resize(carte.width(), carte.height());
-    ui->cartelarochelle->setRenderHints(QPainter::Antialiasing);
+    ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
+
     qDebug() << QString(reponse);
 }
+
 
 void MainWindow::mettre_a_jour_ihm()
 {
@@ -143,3 +145,5 @@ void MainWindow::afficher_erreur(QAbstractSocket::SocketError socketError)
                                      .arg(tcpSocket->errorString()));
     }
 }
+
+
