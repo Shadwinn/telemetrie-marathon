@@ -7,6 +7,9 @@
 #include <QTimer>
 #include <QDebug>
 #include <QImage>
+#include <QLabel>
+#include <QPixmap>
+
 
 
 

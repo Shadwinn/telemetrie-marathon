@@ -6,8 +6,9 @@ smkgsnjgsjgnsgshjgsjomgnjo
 
 ## Tests
 Il suffit de **compiler** et **lancer** le projet
-``` cpp
+```cpp
 #include <iostream>
 using namespace std
+```
 
 // la suite

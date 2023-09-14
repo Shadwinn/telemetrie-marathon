@@ -210,7 +210,7 @@
    <widget class="QLabel" name="lat_txt">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>770</x>
       <y>20</y>
       <width>171</width>
       <height>20</height>
@@ -223,8 +223,8 @@
    <widget class="QLabel" name="long_txt">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>40</y>
+      <x>770</x>
+      <y>50</y>
       <width>181</width>
       <height>20</height>
      </rect>
@@ -236,8 +236,8 @@
    <widget class="QLabel" name="altitude_txt">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>60</y>
+      <x>770</x>
+      <y>80</y>
       <width>91</width>
       <height>20</height>
      </rect>
@@ -249,8 +249,8 @@
    <widget class="QLabel" name="frequence_txt">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>80</y>
+      <x>770</x>
+      <y>140</y>
       <width>171</width>
       <height>20</height>
      </rect>
@@ -262,8 +262,8 @@
    <widget class="QLabel" name="fcmax_txt">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>140</y>
+      <x>770</x>
+      <y>170</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -275,8 +275,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>160</y>
+      <x>770</x>
+      <y>200</y>
       <width>151</width>
       <height>20</height>
      </rect>
@@ -427,19 +427,22 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>10</y>
+      <y>20</y>
       <width>694</width>
       <height>638</height>
      </rect>
     </property>
-    <property name="text">
-     <string/>
+    <property name="maximumSize">
+     <size>
+      <width>694</width>
+      <height>638</height>
+     </size>
     </property>
-    <property name="openExternalLinks">
+    <property name="acceptDrops">
      <bool>true</bool>
     </property>
-    <property name="textInteractionFlags">
-     <set>Qt::NoTextInteraction</set>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

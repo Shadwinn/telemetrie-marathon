@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Instanciation de la carte
     pCarte = new QImage();
-    pCarte->load(".\\carte_la_rochelle_plan.png");
+    pCarte->load("carte_la_rochelle_plan.png");
 
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
@@ -85,9 +85,9 @@ void MainWindow::gerer_donnees()
     QStringList liste = trame.split(",");
     QString horaire = liste[1];
     QString latitude = liste[2];
-    QString nord_ou_sud = liste[3];
+    QString N_or_S = liste[3];
     QString longitude = liste[4];
-    QString est_ou_ouest = liste[5];
+    QString W_or_E = liste[5];
     QString postype = liste[6];
     QString nb_satellite = liste[7];
     QString precision_horizontale = liste[8];
@@ -103,12 +103,13 @@ void MainWindow::gerer_donnees()
     QString minutes = horaire.mid(2,2);
     QString sec = horaire.mid(4,2);
 
-    // Affichage
-    ui->lineEdit_reponse->setText(QString(reponse));
-    ui->lineEdit_heure->setText(heure+" h "+minutes+" min "+sec+" sec ");
+    //
     ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
     ui->label_carte->setFixedSize(pCarte->width(), pCarte->height());
-
+    ui->lineEdit_reponse->setText(QString(reponse));
+    ui->lineEdit_heure->setText(heure+" h "+minutes+" min "+sec+" sec ");
+    ui->lineEdit_altitude->setText(altitude);
+    ui->lineEdit_long->setText(longitude.mid(2,1) + "." + longitude.mid(3,2) + longitude.mid(6,10));
     qDebug() << QString(reponse);
 }
 
