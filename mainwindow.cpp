@@ -95,11 +95,11 @@ void MainWindow::gerer_donnees()
     QString nb_satellite = liste[7];
     QString precision_horizontale = liste[8];
     QString altitude = liste[9];
-    QString hauteur_geo = liste[10];
-    QString unite_altitude = liste[11];
-    QString tps_last_maj = liste[12];
-    QString id_station_ref = liste[13];
-    QString checksum = liste[14];
+    QString unite_altitude = liste[10];
+    QString hauteur_geo = liste[11];
+    QString unite_hauteur = liste[12];
+    QString tps_last_maj = liste[13];
+    QString frequence_cardiaque = liste[14];
 
     // Temps en seconde
     int heure = horaire.mid(0,2).toInt();
@@ -142,7 +142,10 @@ void MainWindow::gerer_donnees()
     QString longitude_string = QString("%1").arg(longitude);
     ui->lineEdit_long->setText(longitude_string);
 
-    //
+    // Fréquence cardiaque
+    int freq = frequence_cardiaque.mid(1,3).toInt();
+    QString freq_string = QString("%1").arg(freq);
+    ui->lineEdit_frequence_bpm->setText(freq_string);
 
 
     ui->lineEdit_reponse->setText(QString(reponse));
