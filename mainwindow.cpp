@@ -24,16 +24,20 @@ MainWindow::MainWindow(QWidget *parent) :
     // Instanciation de la carte
     pCarte = new QImage();
     pCarte->load("carte_la_rochelle_plan.png");
+    ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
+    //C:\\Users\\shadw\\OneDrive\\Bureau\\tp_dev_marathon\\carte_la_rochelle_plan.png
 
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
 
-    // Lancement du timer avec un tick toutes les 1000 ms
-    pTimer->start(1000);
+
 }
 
 MainWindow::~MainWindow()
 {
+    // Destruction du timer
+    delete pTimer;
+
     // Destruction de la socket
     tcpSocket->abort();
     delete tcpSocket;
@@ -43,9 +47,6 @@ MainWindow::~MainWindow()
 
     // Arrêt du timer
     pTimer->stop();
-
-    // Destruction du timer
-    delete pTimer;
 
     // Destruction de la carte
     delete pCarte;
@@ -59,6 +60,8 @@ void MainWindow::on_connexionButton_clicked()
 
     // Connexion au serveur
     tcpSocket->connectToHost(adresse_ip, port_tcp);
+    // Lancement du timer avec un tick toutes les 1000 ms
+    pTimer->start(1000);
 }
 
 void MainWindow::on_deconnexionButton_clicked()
@@ -84,9 +87,9 @@ void MainWindow::gerer_donnees()
     QString trame = QString(reponse);
     QStringList liste = trame.split(",");
     QString horaire = liste[1];
-    QString latitude = liste[2];
+    QString lat = liste[2];
     QString N_or_S = liste[3];
-    QString longitude = liste[4];
+    QString lon = liste[4];
     QString W_or_E = liste[5];
     QString postype = liste[6];
     QString nb_satellite = liste[7];
@@ -98,18 +101,51 @@ void MainWindow::gerer_donnees()
     QString id_station_ref = liste[13];
     QString checksum = liste[14];
 
-    // Calculs
-    QString heure = horaire.mid(0,2);
-    QString minutes = horaire.mid(2,2);
-    QString sec = horaire.mid(4,2);
+    // Temps en seconde
+    int heure = horaire.mid(0,2).toInt();
+    int minutes = horaire.mid(2,2).toInt();
+    int sec = horaire.mid(4,2).toInt();
+    int timestamp = (heure*3600)+(minutes*60)+sec;
+    QString timestampQString = QString("%1").arg(timestamp);
+    ui->lineEdit_heure->setText(timestampQString);
+
+    // Altitude
+    ui->lineEdit_altitude->setText(altitude);
+
+    // Latitude
+    double latitude = 0.0;
+    double degres_lat = lat.mid(0,2).toDouble();
+    double minutes_lat = lat.mid(2,7).toDouble();
+    if( N_or_S == "S"){
+        latitude = (degres_lat + (minutes_lat / 60))*(-1);
+    }else if(N_or_S == "N"){
+        latitude = degres_lat + (minutes_lat / 60);
+
+    }else{
+        latitude =(degres_lat + (minutes_lat / 60));
+    }
+    QString latitude_string = QString("%1").arg(latitude);
+    ui->lineEdit_lat->setText(latitude_string);
+
+    // Longitude
+    double longitude = 0.0;
+    double degres_long = lon.mid(0,3).toDouble();
+    double minutes_long = lon.mid(3,7).toDouble();
+    if( W_or_E == "W"){
+        longitude = (degres_long + (minutes_long / 60))*(-1);
+    }else if(W_or_E == "E"){
+        longitude = degres_long + (minutes_long / 60);
+
+    }else{
+        longitude =(degres_long + (minutes_long / 60));
+    }
+    QString longitude_string = QString("%1").arg(longitude);
+    ui->lineEdit_long->setText(longitude_string);
 
     //
-    ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
-    ui->label_carte->setFixedSize(pCarte->width(), pCarte->height());
+
+
     ui->lineEdit_reponse->setText(QString(reponse));
-    ui->lineEdit_heure->setText(heure+" h "+minutes+" min "+sec+" sec ");
-    ui->lineEdit_altitude->setText(altitude);
-    ui->lineEdit_long->setText(longitude.mid(2,1) + "." + longitude.mid(3,2) + longitude.mid(6,10));
     qDebug() << QString(reponse);
 }
 
