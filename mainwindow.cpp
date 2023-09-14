@@ -147,6 +147,13 @@ void MainWindow::gerer_donnees()
     QString freq_string = QString("%1").arg(freq);
     ui->lineEdit_frequence_bpm->setText(freq_string);
 
+    //Fc max
+
+    int age = ui->spinBox->value();
+    float fcmax = (207- ( 0.7*age));
+    QString fcmax_string = QString("%1").arg(fcmax);
+    ui->lineEdit_fcmax_bpm->setText(fcmax_string);
+
 
     ui->lineEdit_reponse->setText(QString(reponse));
     qDebug() << QString(reponse);

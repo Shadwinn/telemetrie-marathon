@@ -354,36 +354,6 @@
      <string>Calories dépensées (en kcal) :</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
-    <property name="geometry">
-     <rect>
-      <x>960</x>
-      <y>440</y>
-      <width>113</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_4">
-    <property name="geometry">
-     <rect>
-      <x>960</x>
-      <y>470</y>
-      <width>113</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_5">
-    <property name="geometry">
-     <rect>
-      <x>960</x>
-      <y>500</y>
-      <width>113</width>
-      <height>24</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
@@ -474,14 +444,43 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>400</y>
+      <x>790</x>
+      <y>380</y>
       <width>571</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>*!!!* Veuillez entrez les informations ci-dessous *!!!*</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>400</y>
+      <width>571</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>pour obtenir les calculs de FC max &amp; Intensité</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>440</y>
+      <width>111</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>18</number>
+    </property>
+    <property name="maximum">
+     <number>80</number>
     </property>
    </widget>
   </widget>
