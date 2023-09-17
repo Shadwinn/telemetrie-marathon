@@ -30,7 +30,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
 
-
 }
 
 MainWindow::~MainWindow()
@@ -50,6 +49,8 @@ MainWindow::~MainWindow()
 
     // Destruction de la carte
     delete pCarte;
+
+
 }
 
 void MainWindow::on_connexionButton_clicked()
@@ -101,19 +102,20 @@ void MainWindow::gerer_donnees()
     QString tps_last_maj = liste[13];
     QString frequence_cardiaque = liste[14];
 
-    // Temps en seconde
+    // Calcul durée
     int heure = horaire.mid(0,2).toInt();
     int minutes = horaire.mid(2,2).toInt();
     int sec = horaire.mid(4,2).toInt();
+    int premier_relevé = 28957;
     int timestamp = (heure*3600)+(minutes*60)+sec;
-    QString timestampQString = QString("%1").arg(timestamp);
+    QString timestampQString = QString("%1").arg(timestamp-premier_relevé);
     ui->lineEdit_heure->setText(timestampQString);
 
     // Altitude
     ui->lineEdit_altitude->setText(altitude);
 
     // Latitude
-    double latitude = 0.0;
+
     double degres_lat = lat.mid(0,2).toDouble();
     double minutes_lat = lat.mid(2,7).toDouble();
     if( N_or_S == "S"){
@@ -128,7 +130,6 @@ void MainWindow::gerer_donnees()
     ui->lineEdit_lat->setText(latitude_string);
 
     // Longitude
-    double longitude = 0.0;
     double degres_long = lon.mid(0,3).toDouble();
     double minutes_long = lon.mid(3,7).toDouble();
     if( W_or_E == "W"){
@@ -154,6 +155,40 @@ void MainWindow::gerer_donnees()
     QString fcmax_string = QString("%1").arg(fcmax);
     ui->lineEdit_fcmax_bpm->setText(fcmax_string);
 
+    // Position projetée
+    const double lat_hg = 46.173311;
+    const double long_hg = -1.195703;
+    const double lat_bd = 46.135451;
+    const double long_bd = -1.136125;
+    const double largeur_carte = 694.0;
+    const double hauteur_carte = 638.0;
+
+    px = largeur_carte*( (longitude - long_hg ) / (long_bd - long_hg) );
+    py = hauteur_carte*( 1.0 - (latitude - lat_bd) / (lat_hg - lat_bd) );
+
+    QPainter p(pCarte);
+    if((lastpx && lastpy)!= 0){
+        p.setPen(Qt::red);
+        p.drawLine(lastpx,lastpy, px, py);
+        p.end();
+        ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
+    }else{
+    }
+
+    //Intensité
+    int intensite = (freq / fcmax)*100;
+    ui->progressBar->setValue(intensite);
+
+    //Distance
+    if((lastlat && lastlong && longitude && latitude) != 0){
+    double distance_ajoutée = 6378 * acos( sin(lastlat)*sin(latitude) + cos(lastlat) * cos(latitude) * cos(lastlong - longitude));
+    distance = distance + distance_ajoutée;
+    QString distance_string = QString("%1").arg(distance);
+    ui->lineEdit_distance->setText(distance_string);
+    }else{
+
+    }
+
 
     ui->lineEdit_reponse->setText(QString(reponse));
     qDebug() << QString(reponse);
@@ -168,6 +203,11 @@ void MainWindow::mettre_a_jour_ihm()
 
     // Envoi de la requête
     tcpSocket->write(requete);
+
+    lastpx = px ;
+    lastpy = py ;
+    lastlat = latitude;
+    lastlong = longitude;
 
 }
 

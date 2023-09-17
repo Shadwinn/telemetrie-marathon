@@ -9,6 +9,7 @@
 #include <QImage>
 #include <QLabel>
 #include <QPixmap>
+#include <QPainter>
 
 
 
@@ -44,7 +45,15 @@ private:
     QTcpSocket *tcpSocket;
     QTimer *pTimer;
     QImage *pCarte;
-
+    double longitude;
+    double latitude;
+    double lastlat;
+    double lastlong;
+    double px;
+    double py;
+    double lastpx;
+    double lastpy;
+    double distance;
 };
 
 #endif // MAINWINDOW_H
