@@ -57,8 +57,11 @@ private:
     double long_rad;
     double lastlat_rad;
     double lastlong_rad;
+    double calcul_distance;
     double distance;
     double lastdistance;
+    int timestamp;
+    int last_timestamp;
 };
 
 #endif // MAINWINDOW_H

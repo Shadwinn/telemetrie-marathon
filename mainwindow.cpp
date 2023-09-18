@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pCarte->load("carte_la_rochelle_plan.png");
     ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
     //C:\\Users\\shadw\\OneDrive\\Bureau\\tp_dev_marathon\\carte_la_rochelle_plan.png
-
+    timestamp = 0;
     longitude = 0.0;
     latitude = 0.0;
     lastlat= 0.0;
@@ -39,8 +39,10 @@ MainWindow::MainWindow(QWidget *parent) :
     long_rad = 0.0;
     lastlat_rad = 0.0;
     lastlong_rad = 0.0;
+    calcul_distance = 0.0;
     distance = 0.0;
     lastdistance = 0.0;
+    last_timestamp = 0;
 
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
@@ -125,7 +127,7 @@ void MainWindow::gerer_donnees()
     int minutes = horaire.mid(2,2).toInt();
     int sec = horaire.mid(4,2).toInt();
     int premier_relevé = 28957;
-    int timestamp = (heure*3600)+(minutes*60)+sec;
+    timestamp = (heure*3600)+(minutes*60)+sec;
     QString timestampQString = QString("%1").arg(timestamp-premier_relevé);
     ui->lineEdit_heure->setText(timestampQString);
 
@@ -168,7 +170,7 @@ void MainWindow::gerer_donnees()
 
     //Fc max
 
-    int age = ui->spinBox->value();
+    int age = ui->spinBox_age->value();
     float fcmax = (207- ( 0.7*age));
     QString fcmax_string = QString("%1").arg(fcmax);
     ui->lineEdit_fcmax_bpm->setText(fcmax_string);
@@ -201,13 +203,25 @@ void MainWindow::gerer_donnees()
     lat_rad = degToRad(latitude);
     long_rad = degToRad(longitude);
     if(long_rad && lat_rad && lastlat_rad && lastlong_rad !=0.0){
-        double calcul_distance = 6378.0 * acos((sin(lastlat_rad) * sin(lat_rad)) + (cos(lastlat_rad) * cos(lat_rad) * cos(lastlong_rad - long_rad)));
+        calcul_distance = 6378.0 * acos((sin(lastlat_rad) * sin(lat_rad)) + (cos(lastlat_rad) * cos(lat_rad) * cos(lastlong_rad - long_rad)));
     distance = lastdistance + calcul_distance;
-    QString distance_string = QString("%1").arg(distance);
-    qDebug() << latitude;
+        QString distance_string = QString("%1").arg(distance);
     ui->lineEdit_distance->setText(distance_string);
     }else{
     }
+
+    //Calories dépensées
+    double poids = ui->spinBox_poids->value();
+    double calories = distance * poids *1.036;
+    QString calories_string = QString("%1").arg(calories);
+    ui->lineEdit_2->setText(calories_string);
+
+    //Vitesse
+    double diff_tps = timestamp - last_timestamp ;
+    double vitesse = calcul_distance / (diff_tps /3600.0 );
+    QString vitesse_string = QString("%1").arg(vitesse);
+    ui->lineEdit_vitesse->setText(vitesse_string);
+
 
 
 
@@ -229,6 +243,7 @@ void MainWindow::mettre_a_jour_ihm()
     lastlat_rad = lat_rad;
     lastlong_rad = long_rad;
     lastdistance = distance;
+    last_timestamp = timestamp;
 
 }
 

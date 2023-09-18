@@ -308,7 +308,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineEdit_vitesse">
     <property name="geometry">
      <rect>
       <x>960</x>
@@ -467,7 +467,7 @@
      <string>pour obtenir les calculs de FC max &amp; Intensité</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QSpinBox" name="spinBox_age">
     <property name="geometry">
      <rect>
       <x>960</x>
@@ -483,7 +483,7 @@
      <number>80</number>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox_2">
+   <widget class="QSpinBox" name="spinBox_poids">
     <property name="geometry">
      <rect>
       <x>960</x>
@@ -499,7 +499,7 @@
      <number>200</number>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox_3">
+   <widget class="QSpinBox" name="spinBox_taille">
     <property name="geometry">
      <rect>
       <x>960</x>
