@@ -53,7 +53,12 @@ private:
     double py;
     double lastpx;
     double lastpy;
+    double lat_rad;
+    double long_rad;
+    double lastlat_rad;
+    double lastlong_rad;
     double distance;
+    double lastdistance;
 };
 
 #endif // MAINWINDOW_H

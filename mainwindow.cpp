@@ -27,6 +27,21 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
     //C:\\Users\\shadw\\OneDrive\\Bureau\\tp_dev_marathon\\carte_la_rochelle_plan.png
 
+    longitude = 0.0;
+    latitude = 0.0;
+    lastlat= 0.0;
+    lastlong = 0.0;
+    px = 0.0;
+    py = 0.0;
+    lastpx = 0.0;
+    lastpy = 0.0;
+    lat_rad = 0.0;
+    long_rad = 0.0;
+    lastlat_rad = 0.0;
+    lastlong_rad = 0.0;
+    distance = 0.0;
+    lastdistance = 0.0;
+
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
 
@@ -80,6 +95,9 @@ void MainWindow::on_envoiButton_clicked()
     // Envoi de la requête
     tcpSocket->write(requete);
 }
+double degToRad(double degrees) {
+    return degrees * M_PI / 180.0;
+}
 
 void MainWindow::gerer_donnees()
 {
@@ -119,12 +137,12 @@ void MainWindow::gerer_donnees()
     double degres_lat = lat.mid(0,2).toDouble();
     double minutes_lat = lat.mid(2,7).toDouble();
     if( N_or_S == "S"){
-        latitude = (degres_lat + (minutes_lat / 60))*(-1);
+        latitude = (degres_lat + (minutes_lat / 60.0))*(-1.0);
     }else if(N_or_S == "N"){
-        latitude = degres_lat + (minutes_lat / 60);
+        latitude = degres_lat + (minutes_lat / 60.0);
 
     }else{
-        latitude =(degres_lat + (minutes_lat / 60));
+        latitude =(degres_lat + (minutes_lat / 60.0));
     }
     QString latitude_string = QString("%1").arg(latitude);
     ui->lineEdit_lat->setText(latitude_string);
@@ -167,7 +185,7 @@ void MainWindow::gerer_donnees()
     py = hauteur_carte*( 1.0 - (latitude - lat_bd) / (lat_hg - lat_bd) );
 
     QPainter p(pCarte);
-    if((lastpx && lastpy)!= 0){
+    if((lastpx != 0.0 && lastpy != 0.0)){
         p.setPen(Qt::red);
         p.drawLine(lastpx,lastpy, px, py);
         p.end();
@@ -180,14 +198,17 @@ void MainWindow::gerer_donnees()
     ui->progressBar->setValue(intensite);
 
     //Distance
-    if((lastlat && lastlong && longitude && latitude) != 0){
-    double distance_ajoutée = 6378 * acos( sin(lastlat)*sin(latitude) + cos(lastlat) * cos(latitude) * cos(lastlong - longitude));
-    distance = distance + distance_ajoutée;
+    lat_rad = degToRad(latitude);
+    long_rad = degToRad(longitude);
+    if(long_rad && lat_rad && lastlat_rad && lastlong_rad !=0.0){
+        double calcul_distance = 6378.0 * acos((sin(lastlat_rad) * sin(lat_rad)) + (cos(lastlat_rad) * cos(lat_rad) * cos(lastlong_rad - long_rad)));
+    distance = lastdistance + calcul_distance;
     QString distance_string = QString("%1").arg(distance);
+    qDebug() << latitude;
     ui->lineEdit_distance->setText(distance_string);
     }else{
-
     }
+
 
 
     ui->lineEdit_reponse->setText(QString(reponse));
@@ -203,11 +224,11 @@ void MainWindow::mettre_a_jour_ihm()
 
     // Envoi de la requête
     tcpSocket->write(requete);
-
     lastpx = px ;
     lastpy = py ;
-    lastlat = latitude;
-    lastlong = longitude;
+    lastlat_rad = lat_rad;
+    lastlong_rad = long_rad;
+    lastdistance = distance;
 
 }
 
