@@ -45,10 +45,12 @@ private:
     QTcpSocket *tcpSocket;
     QTimer *pTimer;
     QImage *pCarte;
+    QImage *pCourbeFreq;
     double longitude;
     double latitude;
     double lastlat;
     double lastlong;
+    int freq;
     double px;
     double py;
     double lastpx;
@@ -62,6 +64,7 @@ private:
     double lastdistance;
     int timestamp;
     int last_timestamp;
+    int compteur;
 };
 
 #endif // MAINWINDOW_H

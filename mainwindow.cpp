@@ -23,9 +23,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Instanciation de la carte
     pCarte = new QImage();
-    pCarte->load("carte_la_rochelle_plan.png");
+    pCarte->load(":/carte_la_rochelle_plan.png");
     ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
-    //C:\\Users\\shadw\\OneDrive\\Bureau\\tp_dev_marathon\\carte_la_rochelle_plan.png
+    pCourbeFreq = new QImage();
+    pCourbeFreq->load(":/carte_la_rochelle_plan.png");
+    ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));
+    pCourbeFreq->fill(Qt::transparent);
     timestamp = 0;
     longitude = 0.0;
     latitude = 0.0;
@@ -43,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     distance = 0.0;
     lastdistance = 0.0;
     last_timestamp = 0;
+    compteur = 0;
 
     // Association du "tick" du timer à l'appel d'une méthode SLOT faire_qqchose()
     connect(pTimer, SIGNAL(timeout()), this, SLOT(mettre_a_jour_ihm()));
@@ -59,7 +63,7 @@ MainWindow::~MainWindow()
     delete tcpSocket;
 
     // Destruction de l'interface graphique
-    delete ui;
+    delete ui; 
 
     // Arrêt du timer
     pTimer->stop();
@@ -164,7 +168,7 @@ void MainWindow::gerer_donnees()
     ui->lineEdit_long->setText(longitude_string);
 
     // Fréquence cardiaque
-    int freq = frequence_cardiaque.mid(1,3).toInt();
+    freq = frequence_cardiaque.mid(1,3).toInt();
     QString freq_string = QString("%1").arg(freq);
     ui->lineEdit_frequence_bpm->setText(freq_string);
 
@@ -217,15 +221,25 @@ void MainWindow::gerer_donnees()
     ui->lineEdit_2->setText(calories_string);
 
     //Vitesse
-    double diff_tps = timestamp - last_timestamp ;
+    double diff_tps = timestamp - last_timestamp;
     double vitesse = calcul_distance / (diff_tps /3600.0 );
     QString vitesse_string = QString("%1").arg(vitesse);
     ui->lineEdit_vitesse->setText(vitesse_string);
 
-
-
+    // courbe fréquence
+    QPainter painter(pCourbeFreq);
+    painter.setPen(QPen(Qt::green, 1));
+    painter.drawLine(compteur, 300, compteur, (300 - freq)+100);
+    painter.end();
+    compteur += 1;
+    if (compteur >= ui->label_courbe_cardiaque->width()) {
+    pCourbeFreq->fill(Qt::transparent);
+    compteur = 0;
+    }
+    ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));
 
     ui->lineEdit_reponse->setText(QString(reponse));
+    qDebug() << compteur;
     qDebug() << QString(reponse);
 }
 
@@ -244,7 +258,6 @@ void MainWindow::mettre_a_jour_ihm()
     lastlong_rad = long_rad;
     lastdistance = distance;
     last_timestamp = timestamp;
-
 }
 
 void MainWindow::afficher_erreur(QAbstractSocket::SocketError socketError)
