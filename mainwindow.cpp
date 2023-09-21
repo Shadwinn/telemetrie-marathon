@@ -232,7 +232,7 @@ void MainWindow::gerer_donnees()
     painter.drawLine(compteur, 95, compteur,200 - freq);
     //Courbe altitude
     painter.setPen(QPen(Qt::yellow, 1));
-    painter.drawLine(compteur, 115, compteur,220 - altitude.toInt());
+    painter.drawLine(compteur, 200, compteur,140 - altitude.toDouble() * 2);
     painter.end();
 
     compteur += 1;
