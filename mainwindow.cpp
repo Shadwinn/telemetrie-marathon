@@ -134,7 +134,6 @@ void MainWindow::gerer_donnees()
     timestamp = (heure*3600)+(minutes*60)+sec;
     QString timestampQString = QString("%1").arg(timestamp-premier_relevé);
     ui->lineEdit_heure->setText(timestampQString);
-
     // Altitude
     ui->lineEdit_altitude->setText(altitude);
 
@@ -192,7 +191,7 @@ void MainWindow::gerer_donnees()
 
     QPainter p(pCarte);
     if((lastpx != 0.0 && lastpy != 0.0)){
-        p.setPen(Qt::red);
+        p.setPen(QPen(Qt::red,2));
         p.drawLine(lastpx,lastpy, px, py);
         p.end();
         ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
@@ -226,18 +225,22 @@ void MainWindow::gerer_donnees()
     QString vitesse_string = QString("%1").arg(vitesse);
     ui->lineEdit_vitesse->setText(vitesse_string);
 
-    // courbe fréquence
+    // Courbes variables
     QPainter painter(pCourbeFreq);
-
-    painter.setPen(QPen(Qt::transparent, 1));
-    painter.drawLine(compteur, 200, compteur,200);
-    painter.setPen(QPen(Qt::green, 1));
-    painter.drawLine(compteur, 135, compteur,200 - freq);
+    // Courbe fréquence
+    painter.setPen(QPen(Qt::red, 1));
+    painter.drawLine(compteur, 95, compteur,200 - freq);
+    //Courbe altitude
+    painter.setPen(QPen(Qt::yellow, 1));
+    painter.drawLine(compteur, 115, compteur,220 - altitude.toInt());
     painter.end();
+
     compteur += 1;
     if (compteur >= ui->label_courbe_cardiaque->width()) {
+    pCourbeFreq->fill(Qt::transparent);
     compteur = 0;
     }
+
     ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));
 
     ui->lineEdit_reponse->setText(QString(reponse));
