@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pCarte->load(":/carte_la_rochelle_plan.png");
     ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
     pCourbeFreq = new QImage();
-    pCourbeFreq->load(":/carte_la_rochelle_plan.png");
+    pCourbeFreq->load(":/fond_courbe_freq.png");
     ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));
     pCourbeFreq->fill(Qt::transparent);
     timestamp = 0;
@@ -228,12 +228,14 @@ void MainWindow::gerer_donnees()
 
     // courbe fréquence
     QPainter painter(pCourbeFreq);
+
+    painter.setPen(QPen(Qt::transparent, 1));
+    painter.drawLine(compteur, 200, compteur,200);
     painter.setPen(QPen(Qt::green, 1));
-    painter.drawLine(compteur, 300, compteur, (300 - freq)+100);
+    painter.drawLine(compteur, 135, compteur,200 - freq);
     painter.end();
     compteur += 1;
     if (compteur >= ui->label_courbe_cardiaque->width()) {
-    pCourbeFreq->fill(Qt::transparent);
     compteur = 0;
     }
     ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));

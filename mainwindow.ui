@@ -516,16 +516,19 @@
     </property>
    </widget>
    <widget class="QLabel" name="label_courbe_cardiaque">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>200</y>
+      <x>20</x>
+      <y>280</y>
       <width>200</width>
-      <height>300</height>
+      <height>200</height>
      </rect>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Box</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="frameShadow">
      <enum>QFrame::Sunken</enum>
