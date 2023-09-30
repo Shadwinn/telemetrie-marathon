@@ -76,6 +76,7 @@ MainWindow::~MainWindow()
 
     // Arrêt du timer
     pTimer->stop();
+    delete pTimer;
 
     // Destruction de la carte
     delete pCartePlan;
@@ -279,7 +280,7 @@ void MainWindow::gerer_donnees()
     // Courbe fréquence
     painter.setPen(QPen(Qt::green, 1));
     painter.drawLine(compteur, 95, compteur,200 - freq);
-    ui->label_HR->setStyleSheet("QLabel { color: green }");
+    ui->label_HR->setStyleSheet("QLabel { color: lightgreen }");
     //Courbe altitude
     painter.setPen(QPen(Qt::red, 1));
     painter.drawLine(compteur, 200, compteur,140 - altitude.toDouble() * 2);
@@ -299,22 +300,30 @@ void MainWindow::gerer_donnees()
     qDebug() << QString(reponse);
 
     // Vérification de la validitée des données
-
     // Calcul du checksum
 
     QString checksum_recu = freq_cardiaque_checksum.mid(5,2);
-    if(checksum_recu != calculateChecksum(trame)){
     QString invalid = "Données Non Valides";
-                      ui->lineEdit_2->setText(invalid);
-    ui->lineEdit_altitude->setText(invalid);
-    ui->lineEdit_distance->setText(invalid);
-    ui->lineEdit_fcmax_bpm->setText(invalid);
-    ui->lineEdit_frequence_bpm->setText(invalid);
-    ui->lineEdit_heure->setText(invalid);
-    ui->lineEdit_lat->setText(invalid);
-    ui->lineEdit_long->setText(invalid);
-    ui->lineEdit_vitesse->setText(invalid);
+    if(checksum_recu != calculateChecksum(trame)){
+
+        ui->lineEdit_2->setText(invalid);
+        ui->lineEdit_altitude->setText(invalid);
+        ui->lineEdit_distance->setText(invalid);
+        ui->lineEdit_fcmax_bpm->setText(invalid);
+        ui->lineEdit_frequence_bpm->setText(invalid);
+        ui->lineEdit_heure->setText(invalid);
+        ui->lineEdit_lat->setText(invalid);
+        ui->lineEdit_long->setText(invalid);
+        ui->lineEdit_vitesse->setText(invalid);
+
+    }else if(int satellite = nb_satellite.toInt() < 3){
+
+        ui->lineEdit_lat->setText(invalid);
+        ui->lineEdit_long->setText(invalid);
+        ui->lineEdit_altitude->setText(invalid);
+
     }else{
+
 
     }
 }
