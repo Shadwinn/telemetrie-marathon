@@ -3,5 +3,6 @@
         <file>carte_la_rochelle_plan.png</file>
         <file>carte_la_rochelle_satellite.png</file>
         <file>fond_courbe_freq.png</file>
+        <file>fond_dessin.png</file>
     </qresource>
 </RCC>

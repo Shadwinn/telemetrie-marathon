@@ -44,8 +44,10 @@ private:
     Ui::MainWindow *ui;
     QTcpSocket *tcpSocket;
     QTimer *pTimer;
-    QImage *pCarte;
+    QImage *pCartePlan;
+    QImage *pCarteSatellite;
     QImage *pCourbeFreq;
+    QImage *pDessin;
     double longitude;
     double latitude;
     double lastlat;

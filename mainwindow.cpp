@@ -22,12 +22,21 @@ MainWindow::MainWindow(QWidget *parent) :
     pTimer = new QTimer();
 
     // Instanciation de la carte
-    pCarte = new QImage();
-    pCarte->load(":/carte_la_rochelle_plan.png");
-    ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
+    pCartePlan = new QImage();
+    pCartePlan->load(":/carte_la_rochelle_plan.png");
+    ui->label_carte->setPixmap(QPixmap::fromImage(*pCartePlan));
+
+    pCarteSatellite = new QImage();
+    pCarteSatellite->load(":/carte_la_rochelle_satellite.png");
+
+    pDessin = new QImage();
+    pDessin->load(":/fond_dessin.png");
+    ui->label_dessin->setPixmap(QPixmap::fromImage(*pDessin));
+
     pCourbeFreq = new QImage();
     pCourbeFreq->load(":/fond_courbe_freq.png");
     ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));
+
     pCourbeFreq->fill(Qt::transparent);
     timestamp = 0;
     longitude = 0.0;
@@ -69,9 +78,16 @@ MainWindow::~MainWindow()
     pTimer->stop();
 
     // Destruction de la carte
-    delete pCarte;
+    delete pCartePlan;
 
+    // Destruction de la carte
+    delete pCarteSatellite;
 
+    // Destruction de la carte
+    delete pDessin;
+
+    // Destruction de la carte
+    delete pCourbeFreq;
 }
 
 void MainWindow::on_connexionButton_clicked()
@@ -178,6 +194,14 @@ void MainWindow::gerer_donnees()
     QString fcmax_string = QString("%1").arg(fcmax);
     ui->lineEdit_fcmax_bpm->setText(fcmax_string);
 
+    // Changement de Carte
+    if(ui->checkBox_carte->isChecked()){
+        ui->label_carte->setPixmap(QPixmap::fromImage(*pCarteSatellite));
+
+    }else{
+        ui->label_carte->setPixmap(QPixmap::fromImage(*pCartePlan));
+    }
+
     // Position projetée
     const double lat_hg = 46.173311;
     const double long_hg = -1.195703;
@@ -189,12 +213,12 @@ void MainWindow::gerer_donnees()
     px = largeur_carte*( (longitude - long_hg ) / (long_bd - long_hg) );
     py = hauteur_carte*( 1.0 - (latitude - lat_bd) / (lat_hg - lat_bd) );
 
-    QPainter p(pCarte);
+    QPainter p(pDessin);
     if((lastpx != 0.0 && lastpy != 0.0)){
         p.setPen(QPen(Qt::red,2));
         p.drawLine(lastpx,lastpy, px, py);
         p.end();
-        ui->label_carte->setPixmap(QPixmap::fromImage(*pCarte));
+        ui->label_dessin->setPixmap(QPixmap::fromImage(*pDessin));
     }else{
     }
 
@@ -228,11 +252,13 @@ void MainWindow::gerer_donnees()
     // Courbes variables
     QPainter painter(pCourbeFreq);
     // Courbe fréquence
-    painter.setPen(QPen(Qt::red, 1));
+    painter.setPen(QPen(Qt::green, 1));
     painter.drawLine(compteur, 95, compteur,200 - freq);
+    ui->label_HR->setStyleSheet("QLabel { color: green }");
     //Courbe altitude
-    painter.setPen(QPen(Qt::yellow, 1));
+    painter.setPen(QPen(Qt::red, 1));
     painter.drawLine(compteur, 200, compteur,140 - altitude.toDouble() * 2);
+    ui->label_altitude->setStyleSheet("QLabel { color: red }");
     painter.end();
 
     compteur += 1;

@@ -540,6 +540,102 @@
      <number>0</number>
     </property>
    </widget>
+   <widget class="QLabel" name="label_HR">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>480</y>
+      <width>49</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>HR</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_altitude">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>580</y>
+      <width>49</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Altitude</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_carte">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>632</y>
+      <width>161</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Carte plan / Carte satellite</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_dessin">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>694</width>
+      <height>638</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <zorder>label_carte</zorder>
+   <zorder>adresse_ip_txt</zorder>
+   <zorder>port_tcp_txt</zorder>
+   <zorder>lineEdit_ip</zorder>
+   <zorder>lineEdit_port</zorder>
+   <zorder>lineEdit_reponse</zorder>
+   <zorder>connexionButton</zorder>
+   <zorder>deconnexionButton</zorder>
+   <zorder>envoiButton</zorder>
+   <zorder>lineEdit_heure</zorder>
+   <zorder>tps_en_sec_txt</zorder>
+   <zorder>lineEdit_frequence_bpm</zorder>
+   <zorder>lineEdit_altitude</zorder>
+   <zorder>lineEdit_long</zorder>
+   <zorder>lineEdit_lat</zorder>
+   <zorder>lineEdit_fcmax_bpm</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>lat_txt</zorder>
+   <zorder>long_txt</zorder>
+   <zorder>altitude_txt</zorder>
+   <zorder>frequence_txt</zorder>
+   <zorder>fcmax_txt</zorder>
+   <zorder>label</zorder>
+   <zorder>distance_txt</zorder>
+   <zorder>lineEdit_distance</zorder>
+   <zorder>lineEdit_vitesse</zorder>
+   <zorder>label_2</zorder>
+   <zorder>lineEdit_2</zorder>
+   <zorder>label_3</zorder>
+   <zorder>label_4</zorder>
+   <zorder>label_5</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_7</zorder>
+   <zorder>label_8</zorder>
+   <zorder>label_9</zorder>
+   <zorder>label_10</zorder>
+   <zorder>spinBox_age</zorder>
+   <zorder>spinBox_poids</zorder>
+   <zorder>spinBox_taille</zorder>
+   <zorder>label_HR</zorder>
+   <zorder>label_altitude</zorder>
+   <zorder>checkBox_carte</zorder>
+   <zorder>label_courbe_cardiaque</zorder>
+   <zorder>label_dessin</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
