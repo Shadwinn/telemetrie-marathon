@@ -120,6 +120,31 @@ void MainWindow::on_envoiButton_clicked()
 double degToRad(double degrees) {
     return degrees * M_PI / 180.0;
 }
+QString calculateChecksum(const QString &nmeaFrame) {
+    // Recherche de l'index du caractère '$'
+    int startIndex = nmeaFrame.indexOf('$');
+    if (startIndex == -1) {
+        return QString(); // Pas de caractère '$' trouvé
+    }
+
+    // Recherche de l'index du caractère '*'
+    int endIndex = nmeaFrame.indexOf('*', startIndex);
+    if (endIndex == -1) {
+        return QString(); // Pas de caractère '*' trouvé
+    }
+
+    // Extraction de la sous-chaîne entre '$' et '*' (exclusivement)
+    QString subString = nmeaFrame.mid(startIndex + 1, endIndex - startIndex - 1);
+
+    // Calcul du checksum en effectuant un XOR sur les caractères hexadécimaux
+    char checksum = 0;
+    for (int i = 0; i < subString.length(); i++) {
+        checksum ^= subString.at(i).toLatin1();
+    }
+
+    // Formatage du checksum en hexadécimal avec deux chiffres
+    return QString("%1").arg(checksum, 2, 16, QLatin1Char('0')).toLower();
+}
 
 void MainWindow::gerer_donnees()
 {
@@ -140,7 +165,7 @@ void MainWindow::gerer_donnees()
     QString hauteur_geo = liste[11];
     QString unite_hauteur = liste[12];
     QString tps_last_maj = liste[13];
-    QString frequence_cardiaque = liste[14];
+    QString freq_cardiaque_checksum = liste[14];
 
     // Calcul durée
     int heure = horaire.mid(0,2).toInt();
@@ -183,7 +208,7 @@ void MainWindow::gerer_donnees()
     ui->lineEdit_long->setText(longitude_string);
 
     // Fréquence cardiaque
-    freq = frequence_cardiaque.mid(1,3).toInt();
+    freq = freq_cardiaque_checksum.mid(1,3).toInt();
     QString freq_string = QString("%1").arg(freq);
     ui->lineEdit_frequence_bpm->setText(freq_string);
 
@@ -272,6 +297,26 @@ void MainWindow::gerer_donnees()
     ui->lineEdit_reponse->setText(QString(reponse));
     qDebug() << compteur;
     qDebug() << QString(reponse);
+
+    // Vérification de la validitée des données
+
+    // Calcul du checksum
+
+    QString checksum_recu = freq_cardiaque_checksum.mid(5,2);
+    if(checksum_recu != calculateChecksum(trame)){
+    QString invalid = "Données Non Valides";
+                      ui->lineEdit_2->setText(invalid);
+    ui->lineEdit_altitude->setText(invalid);
+    ui->lineEdit_distance->setText(invalid);
+    ui->lineEdit_fcmax_bpm->setText(invalid);
+    ui->lineEdit_frequence_bpm->setText(invalid);
+    ui->lineEdit_heure->setText(invalid);
+    ui->lineEdit_lat->setText(invalid);
+    ui->lineEdit_long->setText(invalid);
+    ui->lineEdit_vitesse->setText(invalid);
+    }else{
+
+    }
 }
 
 

@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QPixmap>
 #include <QPainter>
+#include <bitset>
 
 
 
