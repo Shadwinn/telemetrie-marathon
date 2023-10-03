@@ -11,6 +11,12 @@
 #include <QPixmap>
 #include <QPainter>
 #include <bitset>
+#include <QtSql>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QCoreApplication>
 
 
 
@@ -49,6 +55,7 @@ private:
     QImage *pCarteSatellite;
     QImage *pCourbeFreq;
     QImage *pDessin;
+    QSqlDatabase bdd;
     double longitude;
     double latitude;
     double lastlat;

@@ -5,8 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT      += network
-
+QT       += network
+QT += sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = test_client_tcp
@@ -22,3 +22,6 @@ FORMS    += mainwindow.ui
 
 RESOURCES += \
     ressources.qrc
+
+
+
