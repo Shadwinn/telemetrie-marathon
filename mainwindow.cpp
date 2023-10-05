@@ -20,18 +20,21 @@ MainWindow::MainWindow(QWidget *parent) :
     // Instanciation du timer
     pTimer = new QTimer();
 
-    // Instanciation de la carte
+    // Instanciation de la carte plan
     pCartePlan = new QImage();
     pCartePlan->load(":/carte_la_rochelle_plan.png");
     ui->label_carte->setPixmap(QPixmap::fromImage(*pCartePlan));
 
+    // Instanciation de la carte satellite
     pCarteSatellite = new QImage();
     pCarteSatellite->load(":/carte_la_rochelle_satellite.png");
 
+    // Instanciation de la carte pour dessiner dessus
     pDessin = new QImage();
     pDessin->load(":/fond_dessin.png");
     ui->label_dessin->setPixmap(QPixmap::fromImage(*pDessin));
 
+    // Instanciation de la carte courbe
     pCourbeFreq = new QImage();
     pCourbeFreq->load(":/fond_courbe_freq.png");
     ui->label_courbe_cardiaque->setPixmap(QPixmap::fromImage(*pCourbeFreq));
@@ -40,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     bdd = QSqlDatabase::addDatabase("QSQLITE");
     bdd.setDatabaseName(QCoreApplication::applicationDirPath() + "/marathon.sqlite");
     bdd.open();
+    qDebug() << QCoreApplication::applicationDirPath() + "/marathon.sqlite";
 
     pCourbeFreq->fill(Qt::transparent);
     timestamp = 0;
@@ -67,8 +71,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    // Destruction du timer
-    delete pTimer;
 
     // Destruction de la socket
     tcpSocket->abort();
@@ -92,6 +94,9 @@ MainWindow::~MainWindow()
 
     // Destruction de la carte
     delete pCourbeFreq;
+
+    //BDD
+    bdd.close();
 }
 
 void MainWindow::on_connexionButton_clicked()
@@ -177,33 +182,47 @@ void MainWindow::gerer_donnees()
     // Calcul du checksum
 
     QString checksum_recu = freq_cardiaque_checksum.mid(5, 2);
-    QString invalid = "Données Non Valides";
-        if (checksum_recu != calculateChecksum(trame)) {
-        ui->lineEdit_2->setText(invalid);
-        ui->lineEdit_altitude->setText(invalid);
-        ui->lineEdit_distance->setText(invalid);
-        ui->lineEdit_fcmax_bpm->setText(invalid);
-        ui->lineEdit_frequence_bpm->setText(invalid);
-        ui->lineEdit_heure->setText(invalid);
-        ui->lineEdit_lat->setText(invalid);
-        ui->lineEdit_long->setText(invalid);
-        ui->lineEdit_vitesse->setText(invalid);
+    QString invalid_checksum = "Checksum non-valide";
+    QString invalid_nb_satellite = "satellites insufisants";
+
+    if (checksum_recu != calculateChecksum(trame)) {
+
+        ui->lineEdit_2->setText(invalid_checksum);
+        ui->lineEdit_altitude->setText(invalid_checksum);
+        ui->lineEdit_distance->setText(invalid_checksum);
+        ui->lineEdit_fcmax_bpm->setText(invalid_checksum);
+        ui->lineEdit_frequence_bpm->setText(invalid_checksum);
+        ui->lineEdit_heure->setText(invalid_checksum);
+        ui->lineEdit_lat->setText(invalid_checksum);
+        ui->lineEdit_long->setText(invalid_checksum);
+        ui->lineEdit_vitesse->setText(invalid_checksum);
+
     } else if (int satellite = nb_satellite.toInt() < 3) {
-        ui->lineEdit_lat->setText(invalid);
-        ui->lineEdit_long->setText(invalid);
-        ui->lineEdit_altitude->setText(invalid);
+
+        ui->lineEdit_lat->setText(invalid_nb_satellite);
+        ui->lineEdit_long->setText(invalid_nb_satellite);
+        ui->lineEdit_altitude->setText(invalid_nb_satellite);
+
     } else {
-        // Calcul de la durée
+
+        // Calcul de la durée écoulée
         int heure = horaire.mid(0, 2).toInt();
         int minutes = horaire.mid(2, 2).toInt();
         int sec = horaire.mid(4, 2).toInt();
         int premier_releve = 28957;
         timestamp = (heure * 3600) + (minutes * 60) + sec;
+        unsigned int heure_ecoule = (timestamp - premier_releve) / 3600;
+        unsigned int min_ecoule = ((timestamp - premier_releve) % 3600) / 60;
+        unsigned int sec_ecoule = ((timestamp - premier_releve) % 3600) % 60;
         QString timestampQString = QString("%1").arg(timestamp - premier_releve);
-        ui->lineEdit_heure->setText(timestampQString);
+        QString heure_ecouleQString = QString("%1").arg(heure_ecoule);
+        QString minQString = QString("%1").arg(min_ecoule);
+        QString sec_ecouleQString = QString("%1").arg(sec_ecoule);
+        ui->lineEdit_heure->setText(heure_ecouleQString +" h " + minQString+" min " + sec_ecouleQString + " s ");
 
         // Altitude
         ui->lineEdit_altitude->setText(altitude);
+        QString altitude_string = QString("%1").arg(altitude);
 
         // Latitude
         double degres_lat = lat.mid(0, 2).toDouble();
@@ -297,15 +316,16 @@ void MainWindow::gerer_donnees()
         ui->lineEdit_vitesse->setText(vitesse_string);
 
         // Courbes variables
-        QPainter painter(pCourbeFreq);
         // Courbe fréquence
+        QPainter painter(pCourbeFreq);
         painter.setPen(QPen(Qt::green, 1));
         painter.drawLine(compteur, 95, compteur, 200 - freq);
-        ui->label_HR->setStyleSheet("QLabel { color: lightgreen }");
+        ui->label_HR->setStyleSheet("QLabel { color: black }");
+
         // Courbe altitude
         painter.setPen(QPen(Qt::red, 1));
         painter.drawLine(compteur, 200, compteur, 140 - altitude.toDouble() * 2);
-        ui->label_altitude->setStyleSheet("QLabel { color: red }");
+        ui->label_altitude->setStyleSheet("QLabel { color: black }");
         painter.end();
 
         compteur += 1;
@@ -318,16 +338,14 @@ void MainWindow::gerer_donnees()
 
 
         // Connection BDD
-        bdd.setDatabaseName("marathon.sqlite");
-
-        if (!bdd.open())
-        {
-            qDebug() << "Error: connection with database fail";
-        }
-        else
-        {
-            qDebug() << "Database: connection ok";
-            qDebug() << bdd.databaseName();
+        QSqlQuery query;
+        query.prepare("INSERT INTO GpsTrack (latitude, longitude, altitude, bpm) VALUES (:latitude, :longitude, :altitude, :bpm)");
+        query.bindValue(":latitude", latitude);
+        query.bindValue(":longitude", longitude);
+        query.bindValue(":altitude", altitude);
+        query.bindValue(":bpm", freq);
+        if (!query.exec()) {
+            qDebug() << "Error executing query: " << query.lastError().text();
         }
 
 
@@ -344,6 +362,8 @@ void MainWindow::mettre_a_jour_ihm()
 
     // Envoi de la requête
     tcpSocket->write(requete);
+
+    // On garde en mémoire les valeurs nécessaire pour le calcul avant l'actualisation du timer
     lastpx = px;
     lastpy = py;
     lastlat_rad = lat_rad;

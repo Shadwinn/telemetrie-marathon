@@ -4,6 +4,5 @@
         <file>carte_la_rochelle_satellite.png</file>
         <file>fond_courbe_freq.png</file>
         <file>fond_dessin.png</file>
-        <file>marathon.sqlite</file>
     </qresource>
 </RCC>

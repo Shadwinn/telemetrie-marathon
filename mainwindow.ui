@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Client TCP v0.1</string>
+   <string>Trainer Supervisor (V1.0)</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QLabel" name="adresse_ip_txt">
@@ -138,7 +138,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Temps écoulé (en s) :</string>
+     <string>Temps écoulé (en h, mn, s) :</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_frequence_bpm">
